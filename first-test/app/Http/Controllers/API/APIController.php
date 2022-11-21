@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class EventController extends Controller
+class APIController extends Controller
 {
-
     public function index(){
 
         return response()->json(Event::orderBy('start_at')->get());

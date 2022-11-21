@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\API\APIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/api/v1/events',[EventController::class, 'index']);
-Route::get('/api/v1/events/active-events',[EventController::class, 'getActiveEvent']);
-Route::get('/api/v1/events/{id} ',[EventController::class, 'getOneEvent']);
-Route::post('/api/v1/events',[EventController::class, 'createEvent']);
-Route::put('/api/v1/events/{id} ',[EventController::class, 'createUpdate']);
-Route::patch('/api/v1/events/{id}',[EventController::class, 'updateEvent']);
-Route::delete('/api/v1/events/{id} ',[EventController::class, 'deleteEvent']);
+Route::get('/api/v1/events',[APIController::class, 'index']);
+Route::get('/api/v1/events/active-events',[APIController::class, 'getActiveEvent']);
+Route::get('/api/v1/events/{id} ',[APIController::class, 'getOneEvent']);
+Route::post('/api/v1/events',[APIController::class, 'createEvent']);
+Route::put('/api/v1/events/{id} ',[APIController::class, 'createUpdate']);
+Route::patch('/api/v1/events/{id}',[APIController::class, 'updateEvent']);
+Route::delete('/api/v1/events/{id} ',[APIController::class, 'deleteEvent']);
