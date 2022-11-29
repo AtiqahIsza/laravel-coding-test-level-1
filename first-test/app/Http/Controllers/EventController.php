@@ -6,16 +6,20 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Illuminate\Support\Facades\Redis;
+use App\Mail\CreateEventNotification;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class EventController extends Controller
 {
+    //with external API
     public function index()
     {
+        $event = Http::get('https://jsonplaceholder.typicode.com/posts');
+        $events = json_decode($event->getBody()->getContents());
 
-        $events = Event::latest()->paginate(5);
-    
-        return view('event.index',compact('events'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('event.index',compact('events'));
 
     }
 
@@ -43,12 +47,15 @@ class EventController extends Controller
 
             return redirect()->route('viewAll')->with('failed','Slug already exist');
 
-
         }else{
 
-            $new = new Event();
-            $success = $new->create($request->all());
+            $success= Event::create($request->all());
             if($success){
+                $emails = [
+                    'title' => 'Notification of Event',
+                    'body' => 'A new event successfully created!'
+                ];
+                Mail::to(auth()->user()->email)->send(new CreateEventNotification($emails));
 
                 return redirect()->route('viewAll')->with('success','Event created successfully');
 
@@ -65,10 +72,31 @@ class EventController extends Controller
     public function show(Request $request)
     {
         
-        $out = new ConsoleOutput();
-        $out->writeln("YOU ARE IN show()");
-        $events = Event::find($request->id);
-        return view('event.show',compact('events'));
+        $cachedEvent = Redis::get('event_' . $request->id);
+
+        if(isset($cachedEvent )) {
+            $events = json_decode($cachedEvent, FALSE);
+      
+            return response()->json([
+                'status_code' => 201,
+                'message' => 'Fetched from redis',
+                'data' => $events,
+            ]);
+        }else {
+            $events = Event::find($request->id);
+            Redis::set('blog_' . $request->id, $events);
+      
+            return response()->json([
+                'status_code' => 201,
+                'message' => 'Fetched from database',
+                'data' => $events,
+            ]);
+        }
+
+        // $events = Event::find($request->id)
+        // return view('event.show',[
+        //     'events' => Redis::get('events' . $request->id)
+        // ]);
 
     }
     

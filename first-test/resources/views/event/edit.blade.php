@@ -1,18 +1,14 @@
-@extends('layouts.app')
-   
-@section('content')
-
-    <div class="max-w-4xl mx-auto mt-8">
-
-        <div class="mb-4">
-            <h1 class="text-3xl font-bold">
-                Edit Event
-            </h1>
-            <div class="flex justify-end mt-5">
-                <a class="px-2 py-1 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" href="{{ route('viewAll') }}">< Back</a>
-            </div>
+<x-app-layout>
+    <x-slot name="header">
+        <h1 class="text-3xl font-bold">
+            Edit Event
+        </h1>
+        <div class="flex justify-end mt-5">
+            <a class="px-2 py-1 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" href="{{ route('viewAll') }}">< Back</a>
         </div>
+    </x-slot>
     
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="flex flex-col mt-5">
             <div class="flex flex-col">
                 <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
@@ -66,4 +62,4 @@
             </div>
         </div>
     </div>
-@endsection
+</x-app-layout>
